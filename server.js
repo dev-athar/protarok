@@ -47,7 +47,7 @@ app.post("/api/signature", (req, res) => {
 });
 
 // reCAPTCHA verification endpoint
-aapp.post("/api/verifycaptcha", async (req, res) => {
+app.post("/api/verifycaptcha", async (req, res) => {
   console.log("Request received:", req.body);
 
   const { recaptchaToken } = req.body;
