@@ -47,20 +47,25 @@ app.post("/api/signature", (req, res) => {
 });
 
 // reCAPTCHA verification endpoint
-app.post("/api/verifycaptcha", async (req, res) => {
-  const { recaptchaToken } = req.body;
+aapp.post("/api/verifycaptcha", async (req, res) => {
+  console.log("Request received:", req.body);
 
+  const { recaptchaToken } = req.body;
   if (!recaptchaToken) {
+    console.error("Missing reCAPTCHA token.");
     return res.status(400).json({ error: "reCAPTCHA token is missing" });
   }
 
   try {
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    console.log("Verifying with secret:", secretKey);
+
     const response = await axios.post(
       `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`
     );
 
     const data = response.data;
+    console.log("reCAPTCHA response:", data);
 
     if (data.success) {
       return res.status(200).json({ success: true });
