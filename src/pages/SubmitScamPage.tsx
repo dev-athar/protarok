@@ -1,5 +1,5 @@
 //SubmitScamPage.tsx
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 
 import { supabase } from "../supabase"; // Ensure you have a supabase.js file exporting the initialized client
 import axios from "axios";
