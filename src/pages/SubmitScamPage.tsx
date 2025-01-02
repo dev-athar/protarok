@@ -587,7 +587,7 @@ const SubmitScamPage: React.FC = () => {
           {/* Add to the end of the form (before the submit button) */}
           <div className="mb-4">
             <ReCAPTCHA
-              sitekey="6LcB06oqAAAAAPg28adZ7vgDkS_TLXR2ax2Dp9E3" // Replace with your actual site key
+              sitekey={process.env.RECAPTCHA_SITE_KEY || ""} // Replace with your actual site key
               onChange={onRecaptchaChange}
             />
           </div>
