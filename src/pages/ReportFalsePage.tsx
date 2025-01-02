@@ -126,7 +126,7 @@ const ReportFalsePage = () => {
           {/* Add to the end of the form (before the submit button) */}
           <div className="mb-4">
             <ReCAPTCHA
-              sitekey={process.env.RECAPTCHA_SITE_KEY || ""} // Replace with your actual site key
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} // Replace with your actual site key
               onChange={onRecaptchaChange}
             />
           </div>

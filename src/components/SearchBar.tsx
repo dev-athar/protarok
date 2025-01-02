@@ -16,7 +16,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     setSearchTerm(initialValue);
-    console.log("initialQuery:", initialValue);
   }, [initialValue]);
 
   const handleSearch = () => {
