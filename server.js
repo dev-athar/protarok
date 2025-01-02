@@ -8,13 +8,13 @@ import axios from "axios";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = import.meta.env.PORT || 5000;
 
 // Configure Cloudinary
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: import.meta.env.CLOUDINARY_CLOUD_NAME,
+  api_key: import.meta.env.CLOUDINARY_API_KEY,
+  api_secret: import.meta.env.CLOUDINARY_API_SECRET,
 });
 
 // Middleware to parse JSON requests
@@ -57,7 +57,7 @@ aapp.post("/api/verifycaptcha", async (req, res) => {
   }
 
   try {
-    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    const secretKey = import.meta.env.RECAPTCHA_SECRET_KEY;
     console.log("Verifying with secret:", secretKey);
 
     const response = await axios.post(

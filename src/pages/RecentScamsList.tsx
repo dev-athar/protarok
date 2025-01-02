@@ -25,7 +25,7 @@ const RecentScamsList: React.FC = () => {
         .limit(6); // Adjust the number as needed
 
       if (error) throw error;
-      console.log("Scam list:", data);
+
       return data;
     } catch (error) {
       console.error("Error fetching recent scams:", error);
