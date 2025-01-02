@@ -1,7 +1,7 @@
-//server.js
 import express from "express";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import cors from "cors";
 import axios from "axios";
 
 // Load environment variables from .env file
@@ -17,15 +17,23 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Middleware to parse JSON requests
-app.use(express.json());
+// Middleware
+// Add this line to your server configuration
+app.use(
+  cors({
+    origin: "*", // Replace with your frontend URL
+    methods: "GET,POST,PUT", // Allowed HTTP methods
+    allowedHeaders: "Content-Type,Authorization", // Allowed headers
+  })
+);
+app.use(express.json()); // Parse JSON requests
 
 // Route to generate Cloudinary signature
 app.post("/api/signature", (req, res) => {
-  const timestamp = Math.floor(new Date().getTime() / 1000);
-  const uploadPreset = "ml_default";
-
   try {
+    const timestamp = Math.floor(new Date().getTime() / 1000);
+    const uploadPreset = "ml_default";
+
     const signature = cloudinary.utils.api_sign_request(
       { timestamp, upload_preset: uploadPreset },
       cloudinary.config().api_secret
@@ -36,13 +44,14 @@ app.post("/api/signature", (req, res) => {
       signature,
       uploadPreset,
       cloudName: cloudinary.config().cloud_name,
-      apiKey: cloudinary.config().api_key, // Include the api_key in the response
+      apiKey: cloudinary.config().api_key, // Include the API key in the response
     });
   } catch (error) {
-    console.error("Error generating signature:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to generate signature", details: error.message });
+    console.error("Error generating signature:", error.message);
+    res.status(500).json({
+      error: "Failed to generate signature",
+      details: error.message,
+    });
   }
 });
 
@@ -57,7 +66,14 @@ app.post("/api/verifycaptcha", async (req, res) => {
   try {
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
     const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${recaptchaToken}`
+      "https://www.google.com/recaptcha/api/siteverify",
+      null,
+      {
+        params: {
+          secret: secretKey,
+          response: recaptchaToken,
+        },
+      }
     );
 
     const data = response.data;
@@ -65,10 +81,13 @@ app.post("/api/verifycaptcha", async (req, res) => {
     if (data.success) {
       return res.status(200).json({ success: true });
     } else {
-      return res.status(400).json({ error: "reCAPTCHA verification failed" });
+      return res.status(400).json({
+        error: "reCAPTCHA verification failed",
+        details: data["error-codes"],
+      });
     }
   } catch (error) {
-    console.error("Error verifying reCAPTCHA:", error);
+    console.error("Error verifying reCAPTCHA:", error.message);
     return res.status(500).json({ error: "Failed to verify reCAPTCHA" });
   }
 });
@@ -90,7 +109,7 @@ app.post("/api/delete-files", async (req, res) => {
 
     res.status(200).json({ message: "Files deleted successfully.", results });
   } catch (error) {
-    console.error("Error deleting files:", error);
+    console.error("Error deleting files:", error.message);
     res.status(500).json({ error: "Failed to delete files." });
   }
 });
