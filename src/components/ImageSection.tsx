@@ -1,32 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-const ImageSection = ({ images, type }) => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+interface ImageSectionProps {
+  images: string[]; // Array of image URLs
+  type: string; // Type of images (e.g., "Proof" or "Additional Evidence")
+}
 
-  if (!images || images.length === 0) return null;
+const ImageSection: React.FC<ImageSectionProps> = ({ images, type }) => {
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null
+  );
+  const handleNext = useCallback((): void => {
+    setSelectedImageIndex((prev) =>
+      prev !== null && prev < images.length - 1 ? prev + 1 : prev
+    );
+  }, [images.length]);
 
-  const handleNext = () => {
-    if (selectedImageIndex < images.length - 1) {
-      setSelectedImageIndex(selectedImageIndex + 1);
-    }
-  };
+  const handlePrev = useCallback((): void => {
+    setSelectedImageIndex((prev) =>
+      prev !== null && prev > 0 ? prev - 1 : prev
+    );
+  }, []);
 
-  const handlePrev = () => {
-    if (selectedImageIndex > 0) {
-      setSelectedImageIndex(selectedImageIndex - 1);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      handleNext();
-    }
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      handlePrev();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent): void => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleNext();
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrev();
+      }
+    },
+    [handleNext, handlePrev] // Dependencies of handleKeyDown
+  );
 
   useEffect(() => {
     if (selectedImageIndex !== null) {
@@ -35,7 +42,7 @@ const ImageSection = ({ images, type }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedImageIndex]);
+  }, [selectedImageIndex, handleKeyDown]); // Include handleKeyDown in the dependency array
 
   return (
     <div className="border rounded-md p-4 bg-white shadow-sm">
