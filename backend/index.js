@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: "https://protarok.vercel.app", // Replace with your frontend's actual URL
+    origin: process.env.VITE_BASE_URL, // Replace with your frontend's actual URL
     methods: ["GET", "POST"],
     credentials: true,
   })

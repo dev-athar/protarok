@@ -31,9 +31,12 @@ const ReportFalsePage = () => {
     }
     try {
       // Send the reCAPTCHA token to the backend for verification
-      const captchaResponse = await axios.post("/api/verifycaptcha", {
-        recaptchaToken,
-      });
+      const captchaResponse = await axios.post(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/verifycaptcha`,
+        {
+          recaptchaToken,
+        }
+      );
 
       if (captchaResponse.data.success) {
         try {

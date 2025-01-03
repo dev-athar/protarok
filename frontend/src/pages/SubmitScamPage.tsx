@@ -176,7 +176,9 @@ const SubmitScamPage: React.FC = () => {
   // };
   const getCloudinarySignature = async () => {
     try {
-      const response = await axios.post("/api/signature");
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/signature`
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching signature:", error);
@@ -221,9 +223,12 @@ const SubmitScamPage: React.FC = () => {
     }
     try {
       // Send the reCAPTCHA token to the backend for verification
-      const captchaResponse = await axios.post("/api/verifycaptcha", {
-        recaptchaToken,
-      });
+      const captchaResponse = await axios.post(
+        `${import.meta.env.VITE_API_ENDPOINT}/api/verifycaptcha`,
+        {
+          recaptchaToken,
+        }
+      );
 
       if (captchaResponse.data.success) {
         // Proceed with submitting the form data
