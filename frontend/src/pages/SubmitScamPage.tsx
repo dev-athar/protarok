@@ -165,9 +165,18 @@ const SubmitScamPage: React.FC = () => {
   };
 
   //signature
+  // const getCloudinarySignature = async () => {
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/api/signature");
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Error fetching signature:", error);
+  //     alert("Unable to get signature from the server.");
+  //   }
+  // };
   const getCloudinarySignature = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/signature");
+      const response = await axios.post("/api/signature");
       return response.data;
     } catch (error) {
       console.error("Error fetching signature:", error);

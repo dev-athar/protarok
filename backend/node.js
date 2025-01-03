@@ -1,4 +1,4 @@
-//server.js
+//node.js
 import express from "express";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
@@ -9,7 +9,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-const PORT = import.meta.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 // Enable CORS for all routes
 app.use(
@@ -85,28 +85,6 @@ app.post("/api/verifycaptcha", async (req, res) => {
   } catch (error) {
     console.error("Error verifying reCAPTCHA:", error);
     return res.status(500).json({ error: "Failed to verify reCAPTCHA" });
-  }
-});
-
-// Route to delete Cloudinary files
-app.post("/api/delete-files", async (req, res) => {
-  try {
-    const { publicIds } = req.body;
-
-    if (!publicIds || publicIds.length === 0) {
-      return res.status(400).json({ error: "No public IDs provided." });
-    }
-
-    const deletePromises = publicIds.map((id) =>
-      cloudinary.uploader.destroy(id)
-    );
-
-    const results = await Promise.all(deletePromises);
-
-    res.status(200).json({ message: "Files deleted successfully.", results });
-  } catch (error) {
-    console.error("Error deleting files:", error);
-    res.status(500).json({ error: "Failed to delete files." });
   }
 });
 
